@@ -6,15 +6,15 @@ The README is designed to walk the user through configuration of a Dynamics envi
 
 ## Pre-Requisites
 
-- .NET Core ([Instructions](https://docs.microsoft.com/en-us/dotnet/core/install/))
+- .NET Core ([Installation Instructions](https://docs.microsoft.com/en-us/dotnet/core/install))
 
-- Azure Functions Core Tools ([Instructions](https://github.com/Azure/azure-functions-core-tools))
+- Azure Functions Core Tools ([Installation Instructions](https://github.com/Azure/azure-functions-core-tools#installing))
 
-- Dynamics Environment with a Common Data Service Database ([Instructions](https://docs.microsoft.com/en-us/power-platform/admin/create-environment))
+- Service Bus Explorer ([Installation Instructions](https://github.com/paolosalvatori/ServiceBusExplorer#installation))
 
-- Service Bus Namespace and Queue ([Instructions](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-quickstart-portal))
+- Dynamics Environment with a Common Data Service Database ([Setup Instructions](https://docs.microsoft.com/en-us/power-platform/admin/create-environment))
 
-- Service Bus Explorer ([Instructions](https://github.com/paolosalvatori/ServiceBusExplorer))
+- Service Bus Namespace and Queue ([Setup Instructions](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-quickstart-portal))
 
 ## Set Up Client Secret Authentication
 
