@@ -38,7 +38,7 @@ _Note: The following steps must be executed by a user with the 'System Administr
 
 - Navigate to the [Power Platform Admin Center](https://admin.powerplatform.com).
 
-- Find the 'Environments' blade and select the proper enviroment. Open the 'Environment URL'.
+- Find the 'Environments' blade and select the proper environment. Open the 'Environment URL'.
 
 - Click the Settings icon and select 'Advanced Settings' from the dropdown, which loads the environment settings page.
 
@@ -51,6 +51,10 @@ _Note: The following steps must be executed by a user with the 'System Administr
 - Input the Application ID and Object ID from the Azure AD app in the 'Application ID' and 'Azure AD Object ID' fields in the form, respectively. Fill in the other fields with any value and click 'Save'.
 
 ## Run the Azure Function
+
+The function app uses the v0.2.14-Alpha prerelease version of the Microsoft.PowerPlatform.Cds.Client package for interaction witt the CDS and Dynamics, Microsoft.Azure.Functions.Extensions for Azure Functions dependency injection, and Newtonsoft.Json for basic JSON deserialization.
+
+The function app's single function, Function1, is designed to connect to Dynamics using the the CdsServiceClient class provided by the SDK. The function then uses the service client to execute WhoAmI and CRUD operations against the environment. The function gains access to a singleton CdsServiceClient through dependency injection so as to not recreate the service client on each invocation.
 
 ### Restore the Project Dependencies
 

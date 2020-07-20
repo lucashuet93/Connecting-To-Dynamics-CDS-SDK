@@ -11,6 +11,7 @@ namespace MyNamespace
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
+            // add CdsServiceClient singleton
             builder.Services.AddSingleton((cdsServiceClient) => {
                 // build connection string
                 string dynamicsEnvironmentUrl = Environment.GetEnvironmentVariable("DynamicsEnvironmentUrl");

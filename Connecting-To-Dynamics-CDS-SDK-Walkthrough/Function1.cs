@@ -15,6 +15,7 @@ namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
 
         public Function1(CdsServiceClient cdsServiceClient)
         {
+            // cdsServiceClient is added via dependency injection
             this._cdsServiceClient = cdsServiceClient;
         }
 
@@ -93,7 +94,8 @@ namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
         }
     }
 
-    public class ServiceBusMessage { 
+    public class ServiceBusMessage
+    {
         public string AccountName { get; set; }
         public string ZipCode { get; set; }
         public int Revenue { get; set; }
