@@ -5,6 +5,7 @@ using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.PowerPlatform.Cds.Client;
+using Newtonsoft.Json;
 
 namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
 {
@@ -22,10 +23,12 @@ namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
         {
             log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
 
-            ConnectToDynamics(_cdsServiceClient);
+            ServiceBusMessage serviceBusMessage = JsonConvert.DeserializeObject<ServiceBusMessage>(myQueueItem);
+
+            ExecuteDynamicsActions(_cdsServiceClient, serviceBusMessage);
         }
 
-        static void ConnectToDynamics(CdsServiceClient service)
+        static void ExecuteDynamicsActions(CdsServiceClient service, ServiceBusMessage serviceBusMessage)
         {
             try
             {
@@ -35,7 +38,7 @@ namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
                     {
                         // execute actions against Dynamics environment
                         ExecuteWhoAmI(service);
-                        ExecuteCRUD(service);
+                        ExecuteCRUD(service, serviceBusMessage);
                         Console.WriteLine("The sample completed successfully");
                         return;
                     }
@@ -59,12 +62,12 @@ namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
             Console.WriteLine("Your UserID: {0}", response.UserId);
         }
 
-        static void ExecuteCRUD(CdsServiceClient service)
+        static void ExecuteCRUD(CdsServiceClient service, ServiceBusMessage serviceBusMessage)
         {
             // CREATE
             Entity newAccount = new Entity("account");
-            newAccount["name"] = "LucasInc";
-            newAccount["address2_postalcode"] = "48103";
+            newAccount["name"] = serviceBusMessage.AccountName;
+            newAccount["address1_postalcode"] = serviceBusMessage.ZipCode;
             Guid accountid = service.Create(newAccount);
             Console.WriteLine("Created {0} entity named {1}.", newAccount.LogicalName, newAccount["name"]);
 
@@ -76,9 +79,7 @@ namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
             // UPDATE
             Entity accountToUpdate = new Entity("account");
             accountToUpdate["accountid"] = newAccount.Id;
-            accountToUpdate["address1_postalcode"] = "48103";
-            accountToUpdate["address2_postalcode"] = null;
-            accountToUpdate["revenue"] = new Money(5000000);
+            accountToUpdate["revenue"] = new Money(serviceBusMessage.Revenue);
             accountToUpdate["creditonhold"] = false;
             service.Update(accountToUpdate);
             Console.WriteLine("Updated Entity");
@@ -88,5 +89,11 @@ namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
             Console.WriteLine("Deleted Entity");
             return;
         }
+    }
+
+    public class ServiceBusMessage { 
+        public string AccountName { get; set; }
+        public string ZipCode { get; set; }
+        public int Revenue { get; set; }
     }
 }
