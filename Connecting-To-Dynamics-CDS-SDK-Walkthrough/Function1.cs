@@ -8,26 +8,25 @@ using Microsoft.PowerPlatform.Cds.Client;
 
 namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
 {
-    public static class Function1
+    public class Function1
     {
+        private readonly CdsServiceClient _cdsServiceClient;
+
+        public Function1(CdsServiceClient cdsServiceClient)
+        {
+            this._cdsServiceClient = cdsServiceClient;
+        }
+
         [FunctionName("Function1")]
-        public static void Run([ServiceBusTrigger("myqueue", Connection = "ServiceBusConnectionString")]string myQueueItem, ILogger log)
+        public void Run([ServiceBusTrigger("myqueue", Connection = "ServiceBusConnectionString")]string myQueueItem, ILogger log)
         {
             log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
 
-            ConnectToDynamics();
+            ConnectToDynamics(_cdsServiceClient);
         }
 
-        static void ConnectToDynamics()
+        static void ConnectToDynamics(CdsServiceClient service)
         {
-            // build connection string
-            string dynamicsEnvironmentUrl = Environment.GetEnvironmentVariable("DynamicsEnvironmentUrl");
-            string dynamicsClientId = Environment.GetEnvironmentVariable("DynamicsClientId");
-            string dynamicsClientSecret = Environment.GetEnvironmentVariable("DynamicsClientSecret");
-            string connectionString = $@"AuthType=ClientSecret;Url={dynamicsEnvironmentUrl};ClientId={dynamicsClientId};ClientSecret={dynamicsClientSecret}";
-
-            // connect to dynamics
-            CdsServiceClient service = new CdsServiceClient(connectionString);
             try
             {
                 if (service != null)
@@ -35,7 +34,6 @@ namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
                     if (service.IsReady)
                     {
                         // execute actions against Dynamics environment
-                        Console.WriteLine("Connected to the CDS");
                         ExecuteWhoAmI(service);
                         ExecuteCRUD(service);
                         Console.WriteLine("The sample completed successfully");
@@ -51,12 +49,6 @@ namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-            }
-            finally
-            {
-                // dispose of the CdsServiceClient instance
-                if (service != null)
-                    service.Dispose();
             }
         }
 
