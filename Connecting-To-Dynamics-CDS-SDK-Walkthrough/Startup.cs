@@ -17,7 +17,6 @@ namespace MyNamespace
                 string dynamicsClientId = Environment.GetEnvironmentVariable("DynamicsClientId");
                 string dynamicsClientSecret = Environment.GetEnvironmentVariable("DynamicsClientSecret");
                 string connectionString = $@"AuthType=ClientSecret;Url={dynamicsEnvironmentUrl};ClientId={dynamicsClientId};ClientSecret={dynamicsClientSecret}";
-
                 // connect to dynamics
                 CdsServiceClient service = new CdsServiceClient(connectionString);
                 Console.WriteLine("Connected to the CDS");

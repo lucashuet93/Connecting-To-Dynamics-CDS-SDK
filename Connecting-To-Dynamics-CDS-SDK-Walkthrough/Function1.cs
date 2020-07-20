@@ -23,8 +23,10 @@ namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
         {
             log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
 
+            // deserialize message contents into useable class
             ServiceBusMessage serviceBusMessage = JsonConvert.DeserializeObject<ServiceBusMessage>(myQueueItem);
 
+            // execute dynamics actions
             ExecuteDynamicsActions(_cdsServiceClient, serviceBusMessage);
         }
 
@@ -36,7 +38,7 @@ namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
                 {
                     if (service.IsReady)
                     {
-                        // execute actions against Dynamics environment
+                        // execute WhoAmI and CRUD operations against Dynamics environment
                         ExecuteWhoAmI(service);
                         ExecuteCRUD(service, serviceBusMessage);
                         Console.WriteLine("The sample completed successfully");
@@ -64,19 +66,19 @@ namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
 
         static void ExecuteCRUD(CdsServiceClient service, ServiceBusMessage serviceBusMessage)
         {
-            // CREATE
+            // create
             Entity newAccount = new Entity("account");
             newAccount["name"] = serviceBusMessage.AccountName;
             newAccount["address1_postalcode"] = serviceBusMessage.ZipCode;
             Guid accountid = service.Create(newAccount);
             Console.WriteLine("Created {0} entity named {1}.", newAccount.LogicalName, newAccount["name"]);
 
-            // READ                      
+            // read                      
             ColumnSet attributes = new ColumnSet("name", "ownerid");
             newAccount = service.Retrieve("account", accountid, attributes);
             Console.WriteLine("Retrieved Entity");
 
-            // UPDATE
+            // update
             Entity accountToUpdate = new Entity("account");
             accountToUpdate["accountid"] = newAccount.Id;
             accountToUpdate["revenue"] = new Money(serviceBusMessage.Revenue);
@@ -84,7 +86,7 @@ namespace Connecting_To_Dynamics_CDS_SDK_Walkthrough
             service.Update(accountToUpdate);
             Console.WriteLine("Updated Entity");
 
-            // DESTROY
+            // delete
             service.Delete("account", accountid);
             Console.WriteLine("Deleted Entity");
             return;
