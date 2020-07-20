@@ -52,7 +52,7 @@ _Note: The following steps must be executed by a user with the 'System Administr
 
 ## Run the Azure Function
 
-The function app uses the v0.2.14-Alpha prerelease version of the Microsoft.PowerPlatform.Cds.Client package for interaction witt the CDS and Dynamics, Microsoft.Azure.Functions.Extensions for Azure Functions dependency injection, and Newtonsoft.Json for basic JSON deserialization.
+The function app uses the ```v0.2.14-Alpha``` prerelease version of the ```Microsoft.PowerPlatform.Cds.Client``` package for interaction witt the CDS and Dynamics, ```Microsoft.Azure.Functions.Extensions``` for Azure Functions dependency injection, and ```Newtonsoft.Json``` for basic JSON deserialization.
 
 The function app's single function, Function1, is designed to connect to Dynamics using the the CdsServiceClient class provided by the SDK. The function then uses the service client to execute WhoAmI and CRUD operations against the environment. The function gains access to a singleton CdsServiceClient through dependency injection so as to not recreate the service client on each invocation.
 
